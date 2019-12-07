@@ -73,6 +73,9 @@ ConsultaRoute.route('/update/:id').post(function(req, res) {
 
 app.use('/consultas', ConsultaRoute);
 
+const loginRouter = require('./signup.routes')
+app.use('/api', loginRouter)
+
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
 });
