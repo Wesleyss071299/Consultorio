@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("./user.model");
+const UserSession = require("./userSession.model");
 const router = express.Router();
 
 router.route("/account/signup").post((req, res, next) => {
@@ -56,6 +57,75 @@ router.route("/account/signup").post((req, res, next) => {
         newUser.save()
       }
     });
+});
+
+router.route("/account/signin").post((req, res) =>{
+  const {body} = req;
+  const{
+    password
+  } = body;
+  let {
+    email
+  } = body;
+
+  if (!email) {
+    return res.send({
+      success: false,
+      message: "Error: Email cannot be blank."
+    });
+  }
+  if (!password) {
+    return res.send({
+      success: false,
+      message: "Error: Password cannot be blank."
+    });
+  }
+
+
+  email = email.toLowerCase();
+
+  User.find({
+    email: email
+  }, (err, users) => {
+    if(err){
+      return res.status(500).send({
+        message: 'Error: Server Error',
+     });
+    }
+
+    if(users.length != 1){
+      return res.status(500).send({
+        message: 'Error: Server Error',
+    });
+    }
+
+    const user = users[0]
+    if(!user.validPassword(password)){
+      return res.status(500).send({
+        message: 'Error: Server Error',
+     });
+    }
+
+    const userSession = new UserSession();
+    userSession.userId = user._id;
+    userSession.save((err, docs) => {
+      if(err){
+        return res.status(500).send({
+          message: 'Error: Server Error',
+       });
+      }else{
+        return res.send({
+          success: true,
+          message: "Valid signin",
+          token: docs._id
+        });
+      }
+    });
+  
+  })
+
+
+
 });
 
 module.exports = router;
