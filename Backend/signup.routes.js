@@ -122,10 +122,34 @@ router.route("/account/signin").post((req, res) =>{
       }
     });
   
-  })
+  });
+});
 
+router.route("/account/verify").get((req, res) =>{
+  const {query} = req;
+  const {token} = req;
 
+  UserSession.find({
+    _id: token,
+    isDeleted:false
+  }, (err, sessions) => {
+    if(err){
+      return res.status(500).send({
+        message: 'Error: Server Error',
+     });
+    }
 
+    if(sessions.length != 1){
+      return res.status(500).send({
+        message: 'Error: Server Error',
+     });
+    }else{
+      return res.send({
+        success: true,
+        message: "Good",
+      });
+    }
+  });
 });
 
 module.exports = router;
