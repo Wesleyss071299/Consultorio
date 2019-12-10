@@ -152,4 +152,23 @@ router.route("/account/verify").get((req, res) =>{
   });
 });
 
+router.route("/account/logout").get((req, res) =>{
+  const {query} = req;
+  const {token} = req;
+
+  UserSession.findOneAndUpdate({
+    _id: token,
+    isDeleted:false
+  },{
+    $set:{isDeleted:true}
+  },null, (err, sessions) => {
+    if(err){
+      return res.status(500).send({
+        message: 'Error: Server Error',
+     });
+    }
+
+  });
+});
+
 module.exports = router;

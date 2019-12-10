@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateConsulta from "./components/create-consulta.component";
 import EditConsulta from "./components/edit-consulta.component";
 import ConsultaList from "./components/consulta-list.component";
+import Home from "./components/Home";
 
 import logo from "./static/webmedlogo.png";
 
@@ -29,8 +30,8 @@ class App extends Component {
               </ul>
             </div>
           </nav>
-
-          <Route path="/" exact component={ConsultaList} />
+          <Route path="/" exact component={Home} />
+          <Route path="/list" component={ConsultaList} />
           <Route path="/edit/:id" component={EditConsulta} />
           <Route path="/create" component={CreateConsulta} />
         </div>
